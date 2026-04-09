@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Auto Deploy
+
+This repo includes a GitHub Actions workflow at `.github/workflows/deploy.yml` that deploys to the VPS on every push to `main`.
+
+Configure these GitHub Actions secrets before using it:
+
+- `VPS_HOST`: VPS public IP or hostname
+- `VPS_PORT`: SSH port, for example `22`
+- `VPS_USER`: SSH user, for example `root`
+- `VPS_SSH_KEY`: private key contents for the VPS deploy key
+
+The workflow deploys to `/www/wwwroot/winner`, rebuilds the app, and restarts the PM2 process `winner` on port `3002`.
+
 ## Getting Started
 
 First, run the development server:
