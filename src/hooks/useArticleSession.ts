@@ -1,6 +1,11 @@
 ﻿'use client';
 import useSWR from 'swr';
-const fetcher = (url: string) => fetch(url).then(r => r.json());
+import { getAccessToken } from '@/lib/auth-token';
+
+const fetcher = (url: string) => {
+  const token = getAccessToken();
+  return fetch(url, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined).then(r => r.json());
+};
 export function useArticleSession(sessionId?: string) {
   const { data: session, mutate: mutateSession, isLoading: sessionLoading } = useSWR(
     sessionId ? `/api/articles/${sessionId}` : null, fetcher, { refreshInterval: 5000 });

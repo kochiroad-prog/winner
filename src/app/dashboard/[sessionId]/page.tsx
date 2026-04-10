@@ -1,9 +1,11 @@
 ﻿'use client';
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useArticleSession } from '@/hooks/useArticleSession';
 import ApprovalUI from '@/components/approval/ApprovalUI';
 import RevisionForm from '@/components/revision/RevisionForm';
 import LinkReviewInterface from '@/components/revision/LinkReviewInterface';
+import { getAccessToken } from '@/lib/auth-token';
+import { useRouter } from 'next/navigation';
 
 const TABS = ['Overview','Approval','Links','Revisi'];
 
@@ -15,6 +17,12 @@ export default function SessionDetailPage({ params }: { params: Promise<{ sessio
   const { sessionId } = use(params);
   const { session, draft, progress } = useArticleSession(sessionId);
   const [activeTab, setActiveTab] = useState('Overview');
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) router.push('/login');
+  }, [router]);
 
   if (!session) return (
     <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'60vh', flexDirection:'column', gap:'16px' }}>

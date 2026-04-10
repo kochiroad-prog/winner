@@ -1,7 +1,9 @@
 ﻿'use client';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useArticleSessions } from '@/hooks/useArticleSession';
 import { articleAPI } from '@/lib/api/article-client';
+import { getAccessToken } from '@/lib/auth-token';
 
 function StatusBadge({ status }: { status: string }) {
   return <span className={`badge badge-${status}`}>{status.charAt(0).toUpperCase() + status.slice(1)}</span>;
@@ -14,6 +16,11 @@ function formatDate(d: string) {
 export default function DashboardPage() {
   const { sessions, mutate, isLoading } = useArticleSessions();
   const router = useRouter();
+
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) router.push('/login');
+  }, [router]);
 
   const handleArchive = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();

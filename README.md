@@ -13,6 +13,16 @@ Configure these GitHub Actions secrets before using it:
 
 The workflow deploys to `/www/wwwroot/winner`, rebuilds the app, and restarts the PM2 process `winner` on port `3002`.
 
+## Supabase Trigger Flow
+
+The app is being aligned to this architecture:
+
+- Dashboard creates the `article_sessions` row only
+- Supabase trigger or Edge Function sends `{ "id": "<session_id>" }` to n8n
+- n8n reads the full dataset from Supabase, runs AI agents, sends WAHA notifications, and writes results back
+
+For the SaaS user model, store login-related profile data in `profiles`, including `whatsapp_number` and `whatsapp_opt_in`.
+
 ## Getting Started
 
 First, run the development server:

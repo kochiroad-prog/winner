@@ -3,6 +3,10 @@ export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 export type AgentName = 'seo_analyzer' | 'content_writer' | 'content_optimizer' | 'link_builder' | 'publisher';
 export type LinkStatus = 'valid' | 'invalid' | 'redirected' | 'pending';
 
+export interface Profile {
+  id: string; full_name?: string; whatsapp_number: string; whatsapp_opt_in?: boolean;
+  created_at: string; updated_at: string;
+}
 export interface ArticleSession {
   id: string; user_id?: string; topic: string; status: SessionStatus;
   cycle_number: number; created_at: string; updated_at: string;

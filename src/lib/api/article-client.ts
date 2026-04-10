@@ -1,5 +1,16 @@
-﻿import axios from 'axios';
+import axios from 'axios';
+import { getAccessToken } from '@/lib/auth-token';
+
 const api = axios.create({ baseURL: '', headers: { 'Content-Type': 'application/json' } });
+
+api.interceptors.request.use((config) => {
+  if (typeof window === 'undefined') return config;
+  const token = getAccessToken();
+  if (!token) return config;
+  config.headers = config.headers || {};
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 export const articleAPI = {
   create: (topic: string) => api.post('/api/articles', { topic }).then(r => r.data),
   list: () => api.get('/api/articles').then(r => r.data),
