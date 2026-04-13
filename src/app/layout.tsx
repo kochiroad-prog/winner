@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 export const metadata: Metadata = {
   title: 'Winner | Article Agent - Multi-Agent SEO Publishing',
@@ -17,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div style={{ display: 'flex', gap: '8px' }}>
             <a href="/" style={{ padding: '8px 16px', borderRadius: '8px', color: '#94a3b8', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>Home</a>
             <a href="/dashboard" style={{ padding: '8px 16px', borderRadius: '8px', color: '#94a3b8', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>Dashboard</a>
+            <a href="/dashboard/internal-links" style={{ padding: '8px 16px', borderRadius: '8px', color: '#94a3b8', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>Artikel Internal</a>
           </div>
         </nav>
         <main>{children}</main>

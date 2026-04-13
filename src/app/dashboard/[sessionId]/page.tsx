@@ -1,10 +1,12 @@
-﻿'use client';
+'use client';
 import { use, useEffect, useState } from 'react';
 import { useArticleSession } from '@/hooks/useArticleSession';
 import ApprovalUI from '@/components/approval/ApprovalUI';
 import RevisionForm from '@/components/revision/RevisionForm';
 import LinkReviewInterface from '@/components/revision/LinkReviewInterface';
+import InternalArticleSelector from '@/components/dashboard/InternalArticleSelector';
 import { getAccessToken } from '@/lib/auth-token';
+import { articleAPI } from '@/lib/api/article-client';
 import { useRouter } from 'next/navigation';
 
 const TABS = ['Overview','Approval','Links','Revisi'];
@@ -17,6 +19,7 @@ export default function SessionDetailPage({ params }: { params: Promise<{ sessio
   const { sessionId } = use(params);
   const { session, draft, progress } = useArticleSession(sessionId);
   const [activeTab, setActiveTab] = useState('Overview');
+  const [actionLoading, setActionLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -114,6 +117,23 @@ export default function SessionDetailPage({ params }: { params: Promise<{ sessio
             <div className="card">
               <h3 style={{ fontWeight:'700', marginBottom:'16px', color:'#94a3b8', fontSize:'13px', textTransform:'uppercase', letterSpacing:'0.05em' }}>Aksi Cepat</h3>
               <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
+                {s.status === 'approved' && (
+                  <button className="btn-primary" onClick={async () => {
+                    setActionLoading(true);
+                    try { await articleAPI.setReady(sessionId); mutateSession(); }
+                    catch(e){ alert('Gagal memproses'); }
+                    finally { setActionLoading(false); }
+                  }} disabled={actionLoading} style={{ width:'100%', padding:'10px', background: 'linear-gradient(135deg, #10b981, #059669)' }}>Set Siap Publish (Ready)</button>
+                )}
+                {s.status === 'ready' && (
+                  <button className="btn-primary" onClick={async () => {
+                    if(!confirm('Publish artikel ini ke Website/WordPress?')) return;
+                    setActionLoading(true);
+                    try { await articleAPI.publish(sessionId); mutateSession(); }
+                    catch(e){ alert('Gagal mempublish'); }
+                    finally { setActionLoading(false); }
+                  }} disabled={actionLoading} style={{ width:'100%', padding:'10px', background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>🚀 Publish ke Website</button>
+                )}
                 <button className="btn-primary" onClick={() => setActiveTab('Approval')} style={{ width:'100%', padding:'10px' }}>Lihat Approval →</button>
                 <button className="btn-secondary" onClick={() => setActiveTab('Links')} style={{ width:'100%', padding:'10px' }}>Review Links</button>
                 <button className="btn-secondary" onClick={() => setActiveTab('Revisi')} style={{ width:'100%', padding:'10px' }}>Request Revisi</button>
@@ -124,7 +144,12 @@ export default function SessionDetailPage({ params }: { params: Promise<{ sessio
       )}
 
       {activeTab === 'Approval' && <ApprovalUI sessionId={sessionId} session={s} />}
-      {activeTab === 'Links' && <LinkReviewInterface sessionId={sessionId} />}
+      {activeTab === 'Links' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <InternalArticleSelector sessionId={sessionId} initialSelected={draft?.recommended_links || []} />
+          <LinkReviewInterface sessionId={sessionId} />
+        </div>
+      )}
       {activeTab === 'Revisi' && <RevisionForm sessionId={sessionId} />}
     </div>
   );
