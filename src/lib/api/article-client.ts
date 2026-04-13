@@ -19,6 +19,8 @@ export const articleAPI = {
   getDraft: (id: string) => api.get(`/api/articles/${id}/draft`).then(r => r.data),
   updateDraft: (id: string, data: any) => api.put(`/api/articles/${id}/draft`, data).then(r => r.data),
   getProgress: (id: string) => api.get(`/api/articles/${id}/progress`).then(r => r.data),
+  setReady: (id: string) => api.put(`/api/articles/${id}/ready`).then(r => r.data),
+  publish: (id: string) => api.post(`/api/articles/${id}/publish`).then(r => r.data),
 };
 export const approvalAPI = {
   submit: (sessionId: string) => api.post('/api/approvals', { session_id: sessionId }).then(r => r.data),
@@ -33,4 +35,9 @@ export const revisionAPI = {
 export const linkAPI = {
   get: (approvalId: string) => api.get(`/api/links/${approvalId}`).then(r => r.data),
   save: (approvalId: string, data: any) => api.put(`/api/links/${approvalId}`, data).then(r => r.data),
+};
+export const internalLinksAPI = {
+  list: () => api.get('/api/internal-links').then(r => r.data),
+  add: (url: string) => api.post('/api/internal-links', { url }).then(r => r.data),
+  remove: (id: string) => api.delete(`/api/internal-links/${id}`).then(r => r.data),
 };

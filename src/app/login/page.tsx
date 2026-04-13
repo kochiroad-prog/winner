@@ -54,6 +54,10 @@ export default function LoginPage() {
           <button className="btn-primary" type="submit" disabled={loading} style={{ marginTop: '6px' }}>
             {loading ? 'Memproses...' : 'Masuk'}
           </button>
+          
+          <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '13px', color: '#94a3b8' }}>
+            Belum punya akun? <a href="/register" style={{ color: '#818cf8', textDecoration: 'none', fontWeight: '600' }}>Daftar di sini</a>
+          </div>
         </form>
       </div>
     </div>
